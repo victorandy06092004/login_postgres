@@ -33,7 +33,10 @@ include 'conexion.php';
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Contraseña</label>
-                    <input type="password" name="contrasena" class="form-control" required>
+                    <input type="password" name="contrasena" class="form-control" 
+                        required
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                        title="Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Estado</label>
