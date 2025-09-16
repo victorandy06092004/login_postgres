@@ -28,6 +28,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
                 🗑️ Eliminar Usuario
             </button>
+            <a href="logout.php" class="btn btn-outline-dark">🚪 Cerrar Sesión</a>
         </div>
     </div>
 
