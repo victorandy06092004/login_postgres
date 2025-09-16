@@ -28,45 +28,57 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
                 🗑️ Eliminar Usuario
             </button>
-            <!-- Botón editar usuario -->
-            <button class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal">
-                ✏️ Editar Usuario
-            </button>
         </div>
     </div>
 
-    <!-- Tabla de usuarios -->
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-striped table-hover text-center">
-                <thead class="table-dark">
+<!-- Tabla de usuarios -->
+<div class="card shadow">
+    <div class="card-body">
+        <table class="table table-striped table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($usuarios as $usuario): ?>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Estado</th>
+                        <td><?= $usuario['id'] ?></td>
+                        <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+                        <td><?= htmlspecialchars($usuario['gmail']) ?></td>
+                        <td>
+                            <?php if ($usuario['estado']): ?>
+                                <span class="badge bg-success">Activo</span>
+                            <?php else: ?>
+                                <span class="badge bg-danger">Inactivo</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <!-- Botón editar individual -->
+                            <button 
+                                class="btn btn-warning btn-sm text-white editarBtn"
+                                data-id="<?= $usuario['id'] ?>"
+                                data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                data-gmail="<?= htmlspecialchars($usuario['gmail']) ?>"
+                                data-contrasena="<?= htmlspecialchars($usuario['contrasena']) ?>"
+                                data-estado="<?= $usuario['estado'] ? 'true' : 'false' ?>"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editarUsuarioModal"
+                            >
+                                ✏️ Editar
+                            </button>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($usuarios as $usuario): ?>
-                        <tr>
-                            <td><?= $usuario['id'] ?></td>
-                            <td><?= htmlspecialchars($usuario['nombre']) ?></td>
-                            <td><?= htmlspecialchars($usuario['gmail']) ?></td>
-                            <td>
-                                <?php if ($usuario['estado']): ?>
-                                    <span class="badge bg-success">Activo</span>
-                                <?php else: ?>
-                                    <span class="badge bg-danger">Inactivo</span>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
+
 
 <!-- Modal: Nuevo Usuario -->
 <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-hidden="true">
@@ -145,29 +157,26 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-            <p class="text-muted">Ingrese el <b>ID</b> del usuario y los nuevos datos:</p>
-            <div class="mb-3">
-                <label class="form-label">ID de Usuario</label>
-                <input type="number" name="id" class="form-control" required>
-            </div>
+            <input type="hidden" name="id" id="edit-id">
+
             <div class="mb-3">
                 <label class="form-label">Nombre</label>
-                <input type="text" name="nombre" class="form-control" required>
+                <input type="text" name="nombre" id="edit-nombre" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Correo electrónico</label>
-                <input type="email" name="gmail" class="form-control" required>
+                <input type="email" name="gmail" id="edit-gmail" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Contraseña</label>
-                <input type="password" name="contrasena" class="form-control"
+                <input type="password" name="contrasena" id="edit-contrasena" class="form-control"
                        required
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
                        title="Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números">
             </div>
             <div class="mb-3">
                 <label class="form-label">Estado</label>
-                <select name="estado" class="form-select" required>
+                <select name="estado" id="edit-estado" class="form-select" required>
                     <option value="true">Activo</option>
                     <option value="false">Inactivo</option>
                 </select>
@@ -183,5 +192,16 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.querySelectorAll('.editarBtn').forEach(button => {
+    button.addEventListener('click', function() {
+        document.getElementById('edit-id').value = this.dataset.id;
+        document.getElementById('edit-nombre').value = this.dataset.nombre;
+        document.getElementById('edit-gmail').value = this.dataset.gmail;
+        document.getElementById('edit-contrasena').value = this.dataset.contrasena;
+        document.getElementById('edit-estado').value = this.dataset.estado;
+    });
+});
+</script>
 </body>
 </html>
