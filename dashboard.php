@@ -20,13 +20,17 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>👤 Lista de Usuarios</h3>
         <div>
-            <!-- Botón que abre modal de nuevo usuario -->
+            <!-- Botón nuevo usuario -->
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
                 ➕ Nuevo Usuario
             </button>
-            <!-- Botón que abre modal de eliminar usuario -->
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
+            <!-- Botón eliminar usuario -->
+            <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
                 🗑️ Eliminar Usuario
+            </button>
+            <!-- Botón editar usuario -->
+            <button class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal">
+                ✏️ Editar Usuario
             </button>
         </div>
     </div>
@@ -64,7 +68,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- Modal para nuevo usuario -->
+<!-- Modal: Nuevo Usuario -->
 <div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -106,7 +110,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<!-- Modal para eliminar usuario -->
+<!-- Modal: Eliminar Usuario -->
 <div class="modal fade" id="eliminarUsuarioModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -116,7 +120,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-            <p class="text-muted">Ingrese el <b>ID</b> del usuario que desea eliminar:</p>
+            <p class="text-muted">Ingrese el <b>ID</b> del usuario a eliminar:</p>
             <div class="mb-3">
                 <label class="form-label">ID de Usuario</label>
                 <input type="number" name="id" class="form-control" required>
@@ -124,6 +128,53 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-danger">Eliminar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Editar Usuario -->
+<div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="editar_usuario.php" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title text-warning">Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted">Ingrese el <b>ID</b> del usuario y los nuevos datos:</p>
+            <div class="mb-3">
+                <label class="form-label">ID de Usuario</label>
+                <input type="number" name="id" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" name="gmail" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" name="contrasena" class="form-control"
+                       required
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                       title="Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <select name="estado" class="form-select" required>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning text-white">Actualizar</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </form>
