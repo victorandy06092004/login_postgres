@@ -24,10 +24,6 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
                 ➕ Nuevo Usuario
             </button>
-            <!-- Botón eliminar usuario -->
-            <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
-                🗑️ Eliminar Usuario
-            </button>
             <a href="logout.php" class="btn btn-outline-dark">🚪 Cerrar Sesión</a>
         </div>
     </div>
@@ -59,7 +55,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <?php endif; ?>
                         </td>
                         <td>
-                            <!-- Botón editar individual -->
+                            <!-- Botón editar -->
                             <button 
                                 class="btn btn-warning btn-sm text-white editarBtn"
                                 data-id="<?= $usuario['id'] ?>"
@@ -72,6 +68,17 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             >
                                 ✏️ Editar
                             </button>
+
+                            <!-- Botón eliminar -->
+                            <button 
+                                class="btn btn-danger btn-sm eliminarBtn"
+                                data-id="<?= $usuario['id'] ?>"
+                                data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                data-bs-toggle="modal"
+                                data-bs-target="#eliminarUsuarioModal"
+                            >
+                                🗑️ Eliminar
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -79,6 +86,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </table>
     </div>
 </div>
+
 
 
 <!-- Modal: Nuevo Usuario -->
@@ -133,20 +141,18 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-            <p class="text-muted">Ingrese el <b>ID</b> del usuario a eliminar:</p>
-            <div class="mb-3">
-                <label class="form-label">ID de Usuario</label>
-                <input type="number" name="id" class="form-control" required>
-            </div>
+            <input type="hidden" name="id" id="delete-id">
+            <p>¿Seguro que deseas eliminar al usuario <b id="delete-nombre"></b>?</p>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-danger">Eliminar</button>
+          <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
 
 <!-- Modal: Editar Usuario -->
 <div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-hidden="true">
@@ -203,6 +209,14 @@ document.querySelectorAll('.editarBtn').forEach(button => {
         document.getElementById('edit-estado').value = this.dataset.estado;
     });
 });
+
+document.querySelectorAll('.eliminarBtn').forEach(button => {
+    button.addEventListener('click', function() {
+        document.getElementById('delete-id').value = this.dataset.id;
+        document.getElementById('delete-nombre').textContent = this.dataset.nombre;
+    });
+});
 </script>
+
 </body>
 </html>
