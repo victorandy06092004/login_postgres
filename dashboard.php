@@ -19,10 +19,16 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>👤 Lista de Usuarios</h3>
-        <!-- Botón que abre el modal -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
-            ➕ Nuevo Usuario
-        </button>
+        <div>
+            <!-- Botón que abre modal de nuevo usuario -->
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#nuevoUsuarioModal">
+                ➕ Nuevo Usuario
+            </button>
+            <!-- Botón que abre modal de eliminar usuario -->
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarUsuarioModal">
+                🗑️ Eliminar Usuario
+            </button>
+        </div>
     </div>
 
     <!-- Tabla de usuarios -->
@@ -93,6 +99,31 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para eliminar usuario -->
+<div class="modal fade" id="eliminarUsuarioModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="eliminar_usuario.php" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Eliminar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p class="text-muted">Ingrese el <b>ID</b> del usuario que desea eliminar:</p>
+            <div class="mb-3">
+                <label class="form-label">ID de Usuario</label>
+                <input type="number" name="id" class="form-control" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Eliminar</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </form>
