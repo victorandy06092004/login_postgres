@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
-$dbname = "Prueba";   // el nombre de tu BD
-$user = "postgres";   // tu usuario de PostgreSQL
+$dbname = "Prueba";   // nombre de tu BD
+$user = "postgres";   // usuario de PostgreSQL
 $pass = "after dark"; // tu contraseña
 
 try {
