@@ -6,7 +6,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gmail = $_POST['gmail'];
     $contrasena = $_POST['contraseña'];
 
-    $sql = "SELECT * FROM usuarios WHERE gmail = :gmail AND contrasena = :contrasena";
+    $sql = "SELECT u.*, r.nombre AS rol_nombre 
+            FROM usuarios u 
+            INNER JOIN rol r ON u.id_rol = r.id_rol
+            WHERE u.gmail = :gmail AND u.contrasena = :contrasena";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':gmail', $gmail);
     $stmt->bindParam(':contrasena', $contrasena);
@@ -17,7 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($usuario['estado']) {
             $_SESSION['usuario'] = $usuario['nombre'];
-            header("Location: dashboard.php");
+            $_SESSION['rol'] = $usuario['rol_nombre']; // Guardamos el rol
+
+            // Redirigir según rol
+            if ($usuario['rol_nombre'] === 'Operario') {
+                header("Location: dashboard_operario.php");
+            } else {
+                header("Location: dashboard.php"); // Admin y Supervisor usan el dashboard completo
+            }
             exit;
         } else {
             echo "<div class='alert alert-warning text-center mt-3'>⚠️ Usuario inactivo. Contacte al administrador.</div>";
