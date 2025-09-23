@@ -25,10 +25,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirigir según rol
             if ($usuario['rol_nombre'] === 'Operario') {
                 header("Location: dashboard_operario.php");
+            } elseif ($usuario['rol_nombre'] === 'Supervisor') {
+                header("Location: dashboard_supervisor.php");
             } else {
-                header("Location: dashboard.php"); // Admin y Supervisor usan el dashboard completo
+                header("Location: dashboard.php"); // Admin
             }
             exit;
+
         } else {
             echo "<div class='alert alert-warning text-center mt-3'>⚠️ Usuario inactivo. Contacte al administrador.</div>";
         }
