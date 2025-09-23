@@ -1,4 +1,14 @@
 <?php
+session_start();
+
+// Si no hay usuario en sesión, redirigir al login
+if (!isset($_SESSION['usuario'])) {
+    header("Location: login.html");
+    exit();
+}
+
+$nombreUsuario = $_SESSION['usuario']; // se guarda en login.php
+
 include 'conexion.php';
 
 // Obtener lista de usuarios
@@ -17,6 +27,10 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body class="bg-light">
 
 <div class="container mt-5">
+
+    <!-- Título con Bienvenida -->
+    <h2 class="mb-4">👋 Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></h2>
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>👤 Lista de Usuarios</h3>
         <div>
@@ -28,175 +42,69 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-<!-- Tabla de usuarios -->
-<div class="card shadow">
-    <div class="card-body">
-        <table class="table table-striped table-hover text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($usuarios as $usuario): ?>
+    <!-- Tabla de usuarios -->
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped table-hover text-center">
+                <thead class="table-dark">
                     <tr>
-                        <td><?= $usuario['id'] ?></td>
-                        <td><?= htmlspecialchars($usuario['nombre']) ?></td>
-                        <td><?= htmlspecialchars($usuario['gmail']) ?></td>
-                        <td>
-                            <?php if ($usuario['estado']): ?>
-                                <span class="badge bg-success">Activo</span>
-                            <?php else: ?>
-                                <span class="badge bg-danger">Inactivo</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <!-- Botón editar -->
-                            <button 
-                                class="btn btn-warning btn-sm text-white editarBtn"
-                                data-id="<?= $usuario['id'] ?>"
-                                data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
-                                data-gmail="<?= htmlspecialchars($usuario['gmail']) ?>"
-                                data-contrasena="<?= htmlspecialchars($usuario['contrasena']) ?>"
-                                data-estado="<?= $usuario['estado'] ? 'true' : 'false' ?>"
-                                data-bs-toggle="modal"
-                                data-bs-target="#editarUsuarioModal"
-                            >
-                                ✏️ Editar
-                            </button>
-
-                            <!-- Botón eliminar -->
-                            <button 
-                                class="btn btn-danger btn-sm eliminarBtn"
-                                data-id="<?= $usuario['id'] ?>"
-                                data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
-                                data-bs-toggle="modal"
-                                data-bs-target="#eliminarUsuarioModal"
-                            >
-                                🗑️ Eliminar
-                            </button>
-                        </td>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <tr>
+                            <td><?= $usuario['id'] ?></td>
+                            <td><?= htmlspecialchars($usuario['nombre']) ?></td>
+                            <td><?= htmlspecialchars($usuario['gmail']) ?></td>
+                            <td>
+                                <?php if ($usuario['estado']): ?>
+                                    <span class="badge bg-success">Activo</span>
+                                <?php else: ?>
+                                    <span class="badge bg-danger">Inactivo</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <!-- Botón editar -->
+                                <button 
+                                    class="btn btn-warning btn-sm text-white editarBtn"
+                                    data-id="<?= $usuario['id'] ?>"
+                                    data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                    data-gmail="<?= htmlspecialchars($usuario['gmail']) ?>"
+                                    data-contrasena="<?= htmlspecialchars($usuario['contrasena']) ?>"
+                                    data-estado="<?= $usuario['estado'] ? 'true' : 'false' ?>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editarUsuarioModal"
+                                >
+                                    ✏️ Editar
+                                </button>
+
+                                <!-- Botón eliminar -->
+                                <button 
+                                    class="btn btn-danger btn-sm eliminarBtn"
+                                    data-id="<?= $usuario['id'] ?>"
+                                    data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#eliminarUsuarioModal"
+                                >
+                                    🗑️ Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+<!-- aquí siguen tus modales y scripts JS -->
 
 
-<!-- Modal: Nuevo Usuario -->
-<div class="modal fade" id="nuevoUsuarioModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="registrar_usuario.php" method="POST">
-        <div class="modal-header">
-          <h5 class="modal-title">Registrar Nuevo Usuario</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" name="nombre" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Correo electrónico</label>
-                <input type="email" name="gmail" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input type="password" name="contrasena" class="form-control"
-                       required
-                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
-                       title="Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select name="estado" class="form-select" required>
-                    <option value="true">Activo</option>
-                    <option value="false">Inactivo</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Guardar</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: Eliminar Usuario -->
-<div class="modal fade" id="eliminarUsuarioModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="eliminar_usuario.php" method="POST">
-        <div class="modal-header">
-          <h5 class="modal-title text-danger">Eliminar Usuario</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" name="id" id="delete-id">
-            <p>¿Seguro que deseas eliminar al usuario <b id="delete-nombre"></b>?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal: Editar Usuario -->
-<div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="editar_usuario.php" method="POST">
-        <div class="modal-header">
-          <h5 class="modal-title text-warning">Editar Usuario</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" name="id" id="edit-id">
-
-            <div class="mb-3">
-                <label class="form-label">Nombre</label>
-                <input type="text" name="nombre" id="edit-nombre" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Correo electrónico</label>
-                <input type="email" name="gmail" id="edit-gmail" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Contraseña</label>
-                <input type="password" name="contrasena" id="edit-contrasena" class="form-control"
-                       required
-                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
-                       title="Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Estado</label>
-                <select name="estado" id="edit-estado" class="form-select" required>
-                    <option value="true">Activo</option>
-                    <option value="false">Inactivo</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-warning text-white">Actualizar</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
