@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($usuario['estado']) {
+            $_SESSION['id_usuario'] = $usuario['id']; // id del usuario logueado
             $_SESSION['usuario'] = $usuario['nombre'];
             $_SESSION['rol'] = $usuario['rol_nombre']; // Guardamos el rol
 

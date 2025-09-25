@@ -77,32 +77,68 @@ $roles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <!-- Botón editar -->
-                                <button 
-                                    class="btn btn-warning btn-sm text-white editarBtn"
-                                    data-id="<?= $usuario['id'] ?>"
-                                    data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
-                                    data-gmail="<?= htmlspecialchars($usuario['gmail']) ?>"
-                                    data-contrasena="<?= htmlspecialchars($usuario['contrasena']) ?>"
-                                    data-estado="<?= $usuario['estado'] ? 'true' : 'false' ?>"
-                                    data-id_rol="<?= $usuario['id_rol'] ?>"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editarUsuarioModal"
-                                >
-                                    ✏️ Editar
-                                </button>
+                                
+                                <?php if ($_SESSION['rol'] === 'Admin'): ?>
+                                    <?php if ($usuario['rol_nombre'] === 'Admin' && $usuario['id'] != $_SESSION['id_usuario']): ?>
+                                        <!-- 🔒 Otro Admin, no editable -->
+                                        <span class="text-muted">🔒 No editable</span>
+                                    <?php else: ?>
+                                        <!-- ✅ Puede editar (su propio perfil o roles menores) -->
+                                        <button 
+                                            class="btn btn-warning btn-sm text-white editarBtn"
+                                            data-id="<?= $usuario['id'] ?>"
+                                            data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                            data-gmail="<?= htmlspecialchars($usuario['gmail']) ?>"
+                                            data-contrasena="<?= htmlspecialchars($usuario['contrasena']) ?>"
+                                            data-estado="<?= $usuario['estado'] ? 'true' : 'false' ?>"
+                                            data-id_rol="<?= $usuario['id_rol'] ?>"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editarUsuarioModal"
+                                        >
+                                            ✏️ Editar
+                                        </button>
 
-                                <!-- Botón eliminar -->
-                                <button 
-                                    class="btn btn-danger btn-sm eliminarBtn"
-                                    data-id="<?= $usuario['id'] ?>"
-                                    data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#eliminarUsuarioModal"
-                                >
-                                    🗑️ Eliminar
-                                </button>
+                                        <!-- ✅ Puede eliminar (pero no otros Admins) -->
+                                        <?php if ($usuario['rol_nombre'] !== 'Admin' || $usuario['id'] == $_SESSION['id_usuario']): ?>
+                                            <button 
+                                                class="btn btn-danger btn-sm eliminarBtn"
+                                                data-id="<?= $usuario['id'] ?>"
+                                                data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#eliminarUsuarioModal"
+                                            >
+                                                🗑️ Eliminar
+                                            </button>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <!-- Otros roles (Supervisor, Operario) → lógica normal -->
+                                    <button 
+                                        class="btn btn-warning btn-sm text-white editarBtn"
+                                        data-id="<?= $usuario['id'] ?>"
+                                        data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                        data-gmail="<?= htmlspecialchars($usuario['gmail']) ?>"
+                                        data-contrasena="<?= htmlspecialchars($usuario['contrasena']) ?>"
+                                        data-estado="<?= $usuario['estado'] ? 'true' : 'false' ?>"
+                                        data-id_rol="<?= $usuario['id_rol'] ?>"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editarUsuarioModal"
+                                    >
+                                        ✏️ Editar
+                                    </button>
+
+                                    <button 
+                                        class="btn btn-danger btn-sm eliminarBtn"
+                                        data-id="<?= $usuario['id'] ?>"
+                                        data-nombre="<?= htmlspecialchars($usuario['nombre']) ?>"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#eliminarUsuarioModal"
+                                    >
+                                        🗑️ Eliminar
+                                    </button>
+                                <?php endif; ?>
                             </td>
+
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
