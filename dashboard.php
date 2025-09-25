@@ -11,7 +11,7 @@ $nombreUsuario = $_SESSION['usuario']; // nombre del usuario logueado
 
 include 'conexion.php';
 
-// Obtener lista de usuarios
+// Obtener lista de usuarios con rol
 $sql = "SELECT u.*, r.nombre AS rol_nombre 
         FROM usuarios u 
         INNER JOIN rol r ON u.id_rol = r.id_rol
@@ -19,7 +19,7 @@ $sql = "SELECT u.*, r.nombre AS rol_nombre
 $stmt = $pdo->query($sql);
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener roles para el formulario de nuevo usuario
+// Obtener roles para los formularios
 $rolesStmt = $pdo->query("SELECT * FROM rol ORDER BY id_rol ASC");
 $roles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -161,7 +161,79 @@ $roles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
 </div>
 
-<!-- Aquí irían los modales de Editar y Eliminar, sin cambios -->
+<!-- Modal: Editar Usuario -->
+<div class="modal fade" id="editarUsuarioModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="editar_usuario.php" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title text-warning">Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="id" id="edit-id">
+
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" id="edit-nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" name="gmail" id="edit-gmail" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" name="contrasena" id="edit-contrasena" class="form-control"
+                       required
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$"
+                       title="Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas y números">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <select name="estado" id="edit-estado" class="form-select" required>
+                    <option value="true">Activo</option>
+                    <option value="false">Inactivo</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Rol</label>
+                <select name="id_rol" id="edit-rol" class="form-select" required>
+                    <?php foreach ($roles as $rol): ?>
+                        <option value="<?= $rol['id_rol'] ?>"><?= htmlspecialchars($rol['nombre']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning text-white">Actualizar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Eliminar Usuario -->
+<div class="modal fade" id="eliminarUsuarioModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="eliminar_usuario.php" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title text-danger">Eliminar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+            <input type="hidden" name="id" id="delete-id">
+            <p>¿Seguro que deseas eliminar a <strong id="delete-nombre"></strong>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Eliminar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
@@ -172,7 +244,7 @@ document.querySelectorAll('.editarBtn').forEach(button => {
         document.getElementById('edit-gmail').value = this.dataset.gmail;
         document.getElementById('edit-contrasena').value = this.dataset.contrasena;
         document.getElementById('edit-estado').value = this.dataset.estado;
-        document.getElementById('edit-rol').value = this.dataset.id_rol; // Asignar rol al editar
+        document.getElementById('edit-rol').value = this.dataset.id_rol;
     });
 });
 
