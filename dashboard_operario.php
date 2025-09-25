@@ -14,6 +14,8 @@ if ($_SESSION['rol'] !== 'Operario') {
 }
 
 $nombreUsuario = $_SESSION['usuario'];
+$nombreRol = $_SESSION['rol']; // rol del usuario logueado
+
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +29,7 @@ $nombreUsuario = $_SESSION['usuario'];
 
 <div class="container mt-5 text-center">
     <!-- Título con saludo -->
-    <h1 class="display-4 mb-4">👋 Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></h1>
+    <h1 class="display-4 mb-4">👋 Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?> - <?= htmlspecialchars($nombreRol); ?></h1>
 
     <!-- Botón Cerrar Sesión -->
     <a href="logout.php" class="btn btn-danger btn-lg">🚪 Cerrar Sesión</a>

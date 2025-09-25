@@ -8,6 +8,7 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 $nombreUsuario = $_SESSION['usuario']; // nombre del usuario logueado
+$nombreRol = $_SESSION['rol']; // rol del usuario logueado
 
 include 'conexion.php';
 
@@ -35,7 +36,7 @@ $roles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="container mt-5">
     <!-- Título con Bienvenida -->
-    <h2 class="mb-4">👋 Bienvenido, <?= htmlspecialchars($nombreUsuario); ?></h2>
+    <h2 class="mb-4">👋 Bienvenido, <?= htmlspecialchars($nombreUsuario); ?> - <?= htmlspecialchars($nombreRol); ?></h2>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3>👤 Lista de Usuarios</h3>

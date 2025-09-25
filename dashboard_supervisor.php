@@ -14,6 +14,7 @@ if ($_SESSION['rol'] !== 'Supervisor') {
 }
 
 $nombreUsuario = $_SESSION['usuario'];
+$nombreRol = $_SESSION['rol']; // rol del usuario logueado
 
 include 'conexion.php';
 
@@ -34,7 +35,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="container mt-5">
     <!-- Saludo -->
-    <h2 class="mb-4">👋 Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?></h2>
+    <h2 class="mb-4">👋 Bienvenido, <?php echo htmlspecialchars($nombreUsuario); ?> - <?= htmlspecialchars($nombreRol); ?></h2>
 
     <!-- Botón Cerrar Sesión -->
     <div class="mb-3 text-end">
