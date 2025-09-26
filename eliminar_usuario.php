@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -10,14 +11,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Volver al dashboard
+        // ✅ Mensaje de éxito
+        $_SESSION['success'] = "Usuario eliminado correctamente";
+
         header("Location: dashboard.php");
         exit;
     } catch (PDOException $e) {
-        echo "<div class='alert alert-danger text-center'>❌ Error: " . $e->getMessage() . "</div>";
+        // ❌ Mensaje de error
+        $_SESSION['error'] = "Error al eliminar usuario: " . $e->getMessage();
+        header("Location: dashboard.php");
+        exit;
     }
 } else {
-    // Si entran sin enviar POST
     header("Location: dashboard.php");
     exit;
 }
