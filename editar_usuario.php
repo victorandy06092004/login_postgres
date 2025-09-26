@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -18,14 +19,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':gmail', $gmail);
         $stmt->bindParam(':contrasena', $contrasena);
         $stmt->bindParam(':estado', $estado, PDO::PARAM_BOOL);
-        $stmt->bindParam(':id_rol', $id_rol, PDO::PARAM_INT); // enlazar rol
+        $stmt->bindParam(':id_rol', $id_rol, PDO::PARAM_INT);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+
+        // ✅ Guardar mensaje de éxito en sesión
+        $_SESSION['success'] = "Usuario actualizado correctamente";
 
         header("Location: dashboard.php");
         exit;
     } catch (PDOException $e) {
-        echo "<div class='alert alert-danger text-center'>❌ Error: " . $e->getMessage() . "</div>";
+        $_SESSION['error'] = "❌ Error: " . $e->getMessage();
+        header("Location: dashboard.php");
+        exit;
     }
 }
 ?>

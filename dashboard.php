@@ -273,6 +273,8 @@ $roles = $rolesStmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 document.querySelectorAll('.editarBtn').forEach(button => {
     button.addEventListener('click', function() {
@@ -292,5 +294,19 @@ document.querySelectorAll('.eliminarBtn').forEach(button => {
     });
 });
 </script>
+
+<?php if (isset($_SESSION['success'])): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: 'Éxito',
+    text: '<?= $_SESSION['success']; ?>',
+    showConfirmButton: false,
+    timer: 2000
+});
+</script>
+<?php unset($_SESSION['success']); endif; ?>
+
 </body>
 </html>
+
