@@ -1,43 +1,48 @@
-<?php
-session_start();
-include 'conexion.php';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Sistema</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Acceso al Sistema</h4>
+                    <p class="mb-0">Inicie sesión con sus credenciales</p>
+                </div>
+                <div class="card-body">
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $gmail = $_POST['gmail'];
-    $contrasena = $_POST['contraseña'];
+                    <?php
+                    session_start();
+                    if (isset($_SESSION['error'])) {
+                        echo "<div class='alert alert-danger text-center'>".$_SESSION['error']."</div>";
+                        unset($_SESSION['error']); // limpiar el mensaje después de mostrarlo
+                    }
+                    ?>
 
-    $sql = "SELECT u.*, r.nombre AS rol_nombre 
-            FROM usuarios u 
-            INNER JOIN rol r ON u.id_rol = r.id_rol
-            WHERE u.gmail = :gmail AND u.contrasena = :contrasena";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':gmail', $gmail);
-    $stmt->bindParam(':contrasena', $contrasena);
-    $stmt->execute();
 
-    if ($stmt->rowCount() > 0) {
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($usuario['estado']) {
-            $_SESSION['id_usuario'] = $usuario['id']; // id del usuario logueado
-            $_SESSION['usuario'] = $usuario['nombre'];
-            $_SESSION['rol'] = $usuario['rol_nombre']; // Guardamos el rol
-
-            // Redirigir según rol
-            if ($usuario['rol_nombre'] === 'Operario') {
-                header("Location: dashboard_operario.php");
-            } elseif ($usuario['rol_nombre'] === 'Supervisor') {
-                header("Location: dashboard_supervisor.php");
-            } else {
-                header("Location: dashboard.php"); // Admin
-            }
-            exit;
-
-        } else {
-            echo "<div class='alert alert-warning text-center mt-3'>⚠️ Usuario inactivo. Contacte al administrador.</div>";
-        }
-    } else {
-        echo "<div class='alert alert-danger text-center mt-3'>❌ Usuario o contraseña incorrectos</div>";
-    }
-}
-?>
+                    <form action="procesar_login.php" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Correo electrónico</label>
+                            <input type="email" name="gmail" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" name="contraseña" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small>Empresita</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
