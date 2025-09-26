@@ -30,8 +30,22 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Panel de Supervisores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-light">
+
+<?php if (isset($_SESSION['rol_cambiado'])): ?>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Rol actualizado',
+            text: '<?= $_SESSION['rol_cambiado']; ?>',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    <?php unset($_SESSION['rol_cambiado']); ?>
+<?php endif; ?>
 
 <div class="container mt-5">
     <!-- Saludo -->
