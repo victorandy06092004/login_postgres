@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +9,9 @@
     <title>Acceso al Sistema</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="estilos.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="login-container">
@@ -17,14 +23,18 @@
                 </div>
                 <div class="card-body">
 
-                    <?php
-                    session_start();
-                    if (isset($_SESSION['error'])) {
-                        echo "<div class='alert alert-danger text-center'>".$_SESSION['error']."</div>";
-                        unset($_SESSION['error']); // limpiar el mensaje después de mostrarlo
-                    }
-                    ?>
-
+                    <!-- Quitamos el div de Bootstrap y usamos SweetAlert -->
+                    <?php if (isset($_SESSION['error'])): ?>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: '<?= $_SESSION['error']; ?>',
+                                confirmButtonText: 'Intentar de nuevo'
+                            });
+                        </script>
+                        <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
 
                     <form action="procesar_login.php" method="POST">
                         <div class="mb-3">
