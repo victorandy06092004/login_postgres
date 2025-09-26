@@ -23,6 +23,7 @@ session_start();
                 </div>
                 <div class="card-body">
 
+                    <!-- Mostrar errores -->
                     <?php if (isset($_SESSION['error'])): ?>
                         <script>
                             Swal.fire({
@@ -33,6 +34,19 @@ session_start();
                             });
                         </script>
                         <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
+
+                    <!-- Mostrar éxito (ejemplo: sesión cerrada correctamente) -->
+                    <?php if (isset($_SESSION['success'])): ?>
+                        <script>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Éxito',
+                                text: '<?= $_SESSION['success']; ?>',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        </script>
+                        <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
 
                     <form action="procesar_login.php" method="POST">
