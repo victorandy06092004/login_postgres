@@ -23,13 +23,12 @@ session_start();
                 </div>
                 <div class="card-body">
 
-                    <!-- Quitamos el div de Bootstrap y usamos SweetAlert -->
                     <?php if (isset($_SESSION['error'])): ?>
                         <script>
                             Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: '<?= $_SESSION['error']; ?>',
+                                icon: '<?= $_SESSION['error']['tipo']; ?>',
+                                title: (<?= $_SESSION['error']['tipo'] === "'warning'" ? "'Atención'" : "'Oops...'" ?>),
+                                text: '<?= $_SESSION['error']['mensaje']; ?>',
                                 confirmButtonText: 'Intentar de nuevo'
                             });
                         </script>

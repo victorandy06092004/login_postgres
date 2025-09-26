@@ -28,16 +28,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } elseif ($usuario['rol_nombre'] === 'Supervisor') {
                 header("Location: dashboard_supervisor.php");
             } else {
-                header("Location: dashboard.php");
+                header("Location: dashboard.php"); // Admin
             }
             exit;
         } else {
-            $_SESSION['error'] = "⚠️ Usuario inactivo. Contacte al administrador.";
+            // ⚠️ Usuario inactivo
+            $_SESSION['error'] = [
+                'tipo' => 'warning',
+                'mensaje' => '⚠️ Usuario inactivo. Contacte al administrador.'
+            ];
             header("Location: login.php");
             exit;
         }
     } else {
-        $_SESSION['error'] = "❌ Usuario o contraseña incorrectos";
+        // ❌ Usuario/contraseña incorrectos
+        $_SESSION['error'] = [
+            'tipo' => 'error',
+            'mensaje' => '❌ Usuario o contraseña incorrectos'
+        ];
         header("Location: login.php");
         exit;
     }
