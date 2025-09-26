@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -10,11 +11,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validar contraseña
     if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $contrasena)) {
-        die("<div class='alert alert-danger text-center mt-3'>
-                ❌ La contraseña debe tener al menos 8 caracteres, 
-                incluir mayúsculas, minúsculas y números.
-             </div>
-             <div class='text-center mt-3'><a href=\"dashboard.php\" class=\"btn btn-primary\">Volver</a></div>");
+        $_SESSION['error'] = "❌ La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números.";
+        header("Location: dashboard.php");
+        exit;
     }
 
     try {
@@ -28,10 +27,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':id_rol', $id_rol, PDO::PARAM_INT);
         $stmt->execute();
 
+        // ✅ Mensaje de éxito
+        $_SESSION['success'] = "Usuario registrado correctamente";
+
         header("Location: dashboard.php");
         exit;
     } catch (PDOException $e) {
-        echo "<div class='alert alert-danger text-center'>❌ Error: " . $e->getMessage() . "</div>";
+        // ❌ Mensaje de error
+        $_SESSION['error'] = "Error al registrar usuario: " . $e->getMessage();
+        header("Location: dashboard.php");
+        exit;
     }
 }
 ?>
