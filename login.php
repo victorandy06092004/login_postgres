@@ -49,6 +49,19 @@ session_start();
                         <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
 
+                    <!-- Mostrar mensaje si el usuario fue desactivado -->
+                    <?php if (isset($_SESSION['logout_message'])): ?>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Sesión cerrada',
+                                text: '<?= $_SESSION['logout_message']; ?>',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        </script>
+                        <?php unset($_SESSION['logout_message']); ?>
+                    <?php endif; ?>
+
                     <form action="procesar_login.php" method="POST">
                         <div class="mb-3">
                             <label class="form-label">Correo electrónico</label>

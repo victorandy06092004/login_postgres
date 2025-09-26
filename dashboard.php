@@ -12,6 +12,23 @@ $nombreRol = $_SESSION['rol']; // rol del usuario logueado
 
 include 'conexion.php';
 
+// Verificar que el usuario siga activo
+$sqlEstado = "SELECT estado FROM usuarios WHERE id = :id";
+$stmtEstado = $pdo->prepare($sqlEstado);
+$stmtEstado->bindParam(':id', $_SESSION['id_usuario'], PDO::PARAM_INT);
+$stmtEstado->execute();
+$estadoUsuario = $stmtEstado->fetchColumn();
+
+if (!$estadoUsuario) {
+    session_unset();
+    session_destroy();
+    session_start();
+    $_SESSION['logout_message'] = "❌ Tu cuenta ha sido desactivada.";
+    header("Location: login.php");
+    exit;
+}
+
+
 // Obtener lista de usuarios con rol
 $sql = "SELECT u.*, r.nombre AS rol_nombre 
         FROM usuarios u 

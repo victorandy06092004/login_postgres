@@ -28,6 +28,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // 🔑 Si el usuario editado es el mismo que está logueado
         if ($_SESSION['id_usuario'] == $id) {
+
+            // 🚨 Si el estado cambió a inactivo, cerrar sesión inmediatamente
+            if (!$estado) {
+                session_unset();
+                session_destroy();
+                session_start();
+                $_SESSION['logout_message'] = "❌ Tu cuenta ha sido desactivada.";
+                header("Location: login.php");
+                exit;
+            }
+
             // Consultar el rol actualizado
             $sqlRol = "SELECT r.nombre AS rol_nombre 
                        FROM usuarios u
